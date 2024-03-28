@@ -3,7 +3,7 @@ export const TYPES = {
     id: "agent",
     title: "Assistant",
     description:
-      "These GPTs can use an arbitrary number of tools, and you can give them arbitrary instructions. The LLM itself is responsible for deciding which tools to call and how many times to call them. This makes them super powerful and flexible, but they can be unreliable at times! As such, only a subset of the most performant models work with these.",
+      "Steps to create a custom bot for a company: \n1. Load the pdf file in the the 'Files' section below. \n2. Select your custom API that you added from the dropdown. \n3. Give the initial instructions. Don't forget to tell the bot to look up the API where necessary. \n4. Save the bot!",
     files: true,
   },
   chatbot: {
