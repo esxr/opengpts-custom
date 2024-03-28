@@ -26,6 +26,11 @@ from typing_extensions import TypedDict
 
 from app.upload import vstore
 
+# CODE INJECTION: import restaurant API tool
+from app.custom_tools.restaurant_api.restaurant_api_wrapper import MenuAPIWrapper
+from app.custom_tools.restaurant_api.restaurant_tool import MenuOrderTool
+# END CODE INJECTION
+
 
 class DDGInput(BaseModel):
     query: str = Field(description="search query to look up")
@@ -52,6 +57,9 @@ class AvailableTools(str, Enum):
     PRESS_RELEASES = "press_releases_kai_ai"
     PUBMED = "pubmed"
     WIKIPEDIA = "wikipedia"
+    # CODE INJECTION: Add custom API toolS
+    RESTAURANT_API = "restaurant_api"
+    # END CODE INJECTION
 
 
 class ToolConfig(TypedDict):
@@ -166,6 +174,22 @@ class Tavily(BaseTool):
     )
 
 
+# CODE INJECTION: Add custom restaurant API tool
+class RestaurantAPITool(BaseTool):
+    type: AvailableTools = Field(AvailableTools.RESTAURANT_API, const=True)
+    name: str = Field("Restaurant API", const=True)
+    description: str = Field(
+        (
+            "Uses the [Restaurant API](https://fine-regions-ring.loca.lt/menu) to fetch restaurant menu. "
+            "Includes sources in the response."
+        ),
+        const=True,
+    )
+
+
+# END CODE INJECTION
+
+
 class TavilyAnswer(BaseTool):
     type: AvailableTools = Field(AvailableTools.TAVILY_ANSWER, const=True)
     name: str = Field("Search (short answer, Tavily)", const=True)
@@ -264,6 +288,12 @@ def _get_tavily():
     tavily_search = TavilySearchAPIWrapper()
     return TavilySearchResults(api_wrapper=tavily_search)
 
+# CODE INJECTION: Add custom restaurant API tool
+@lru_cache(maxsize=1)
+def _get_restaurant_api():
+    menu_search = MenuAPIWrapper()
+    return MenuOrderTool(api_wrapper=menu_search)
+# END CODE INJECTION
 
 @lru_cache(maxsize=1)
 def _get_tavily_answer():
@@ -296,6 +326,9 @@ TOOLS = {
     AvailableTools.PRESS_RELEASES: _get_press_releases,
     AvailableTools.PUBMED: _get_pubmed,
     AvailableTools.TAVILY: _get_tavily,
+    # CODE INJECTION: Add custom API tool
+    AvailableTools.RESTAURANT_API: _get_restaurant_api,
+    # END CODE INJECTION
     AvailableTools.WIKIPEDIA: _get_wikipedia,
     AvailableTools.TAVILY_ANSWER: _get_tavily_answer,
 }

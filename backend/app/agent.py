@@ -33,12 +33,16 @@ from app.tools import (
     Retrieval,
     SecFilings,
     Tavily,
+    # CODE INJECTION: Import Custom Tools
+    RestaurantAPITool,
+    # END CODE INJECTION
     TavilyAnswer,
     Wikipedia,
     YouSearch,
     get_retrieval_tool,
     get_retriever,
 )
+
 
 Tool = Union[
     ActionServer,
@@ -51,6 +55,7 @@ Tool = Union[
     PubMed,
     Wikipedia,
     Tavily,
+    RestaurantAPITool,
     TavilyAnswer,
     Retrieval,
 ]
